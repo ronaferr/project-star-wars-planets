@@ -1,10 +1,14 @@
-// xablau
 import React from 'react';
 import './App.css';
+import Table from './Components/Table';
+import ProviderPlanets from './Context/ProviderPlanets';
 
 function App() {
   return (
-    <span>Hello, App!</span>
+    <ProviderPlanets>
+      <main>Hello World</main>
+      <Table />
+    </ProviderPlanets>
   );
 }
 
