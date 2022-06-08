@@ -4,9 +4,15 @@ import ContextPlanets from './ContextPlanets';
 
 function ProviderPlanets({ children }) {
   const [data, setData] = useState([]);
+  const [filterData, setFilterData] = useState([]);
+  const [filters, setFilters] = useState({});
   const contextValue = {
     data,
     setData,
+    filterData,
+    setFilterData,
+    filters,
+    setFilters,
   };
 
   return (

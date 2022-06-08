@@ -3,16 +3,17 @@ import ContextPlanets from '../Context/ContextPlanets';
 
 function Table() {
   const endPoint = 'https://swapi-trybe.herokuapp.com/api/planets/';
-  const { data, setData } = useContext(ContextPlanets);
+  const { filterData, setData, setFilterData } = useContext(ContextPlanets);
   useEffect(() => {
     const getPlanets = async () => {
       const { results } = await fetch(endPoint).then((response) => response.json());
       results.map((planet) => delete planet.residents);
       setData(results);
+      setFilterData(results);
     };
     getPlanets();
   }, []);
-  console.log(data);
+
   return (
     <div>
       <table>
@@ -34,7 +35,7 @@ function Table() {
           </tr>
         </thead>
         <tbody>
-          {data.map((planet) => (
+          {filterData.map((planet) => (
             <tr key={ planet.name }>
               <td>{planet.name}</td>
               <td>{planet.rotation_period}</td>
