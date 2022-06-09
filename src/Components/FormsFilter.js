@@ -7,6 +7,9 @@ function FormsFilter() {
   const [comparison, setComparison] = useState('maior que');
   const ZERO = 0;
   const [value, setValue] = useState(ZERO);
+  const INITIAL_COLUMN_OPTIONS = ['population', 'orbital_period',
+    'diameter', 'rotation_period', 'surface_water'];
+  const [columnOptions, setColumnOptions] = useState(INITIAL_COLUMN_OPTIONS);
   const { data, setFilterData, setFilters,
     filterByNumericValues, setFilterByNumericValues } = useContext(ContextPlanets);
 
@@ -36,7 +39,7 @@ function FormsFilter() {
         }
       })), filterNamePlanets);
     setFilterData(arrayMultipliFilters);
-  }, [filterByName, filterByNumericValues]);
+  }, [filterByName, filterByNumericValues, columnOptions]);
 
   const handleClickFilter = () => {
     const newFilterByNumericValues = {
@@ -45,6 +48,8 @@ function FormsFilter() {
       value,
     };
     setFilterByNumericValues([...filterByNumericValues, newFilterByNumericValues]);
+    const filterColumnOptions = columnOptions.filter((option) => option !== column);
+    setColumnOptions(filterColumnOptions);
   };
 
   return (
@@ -59,11 +64,14 @@ function FormsFilter() {
         data-testid="column-filter"
         onChange={ ({ target }) => { setColumn(target.value); } }
       >
-        <option>population</option>
+        {columnOptions.map((option) => (
+          <option key={ option }>{option}</option>
+        ))}
+        {/* <option>population</option>
         <option>orbital_period</option>
         <option>diameter</option>
         <option>rotation_period</option>
-        <option>surface_water</option>
+        <option>surface_water</option> */}
       </select>
       <select
         data-testid="comparison-filter"
@@ -86,10 +94,14 @@ function FormsFilter() {
       >
         Filtrar
       </button>
+      <button data-testid="button-remove-filters" type="button">Remover Filtros</button>
       {filterByNumericValues.map((filter) => (
-        <p key={ filter.value }>
-          {`${filter.column} ${filter.comparison} ${filter.value}`}
-        </p>))}
+        <div key={ filter.value } data-testid="filter">
+          <p>
+            {`${filter.column} ${filter.comparison} ${filter.value}`}
+          </p>
+          <button type="button">X</button>
+        </div>))}
     </section>
   );
 }
