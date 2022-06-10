@@ -2,14 +2,18 @@ import React, { useContext, useEffect, useState } from 'react';
 import ContextPlanets from '../Context/ContextPlanets';
 
 function FormsFilter() {
+  const INITIAL_COLUMN_OPTIONS = ['population', 'orbital_period',
+    'diameter', 'rotation_period', 'surface_water'];
+  const ZERO = 0;
+
   const [filterByName, setFilterByName] = useState('');
   const [column, setColumn] = useState('population');
   const [comparison, setComparison] = useState('maior que');
-  const ZERO = 0;
   const [value, setValue] = useState(ZERO);
-  const INITIAL_COLUMN_OPTIONS = ['population', 'orbital_period',
-    'diameter', 'rotation_period', 'surface_water'];
   const [columnOptions, setColumnOptions] = useState(INITIAL_COLUMN_OPTIONS);
+  // const [filterColumn, setFilterColumn] = useState(INITIAL_COLUMN_OPTIONS);
+  // const [deleteFilter, setDeleteFilter] = useState('');
+
   const { data, setFilterData, setFilters,
     filterByNumericValues, setFilterByNumericValues } = useContext(ContextPlanets);
 
@@ -39,7 +43,13 @@ function FormsFilter() {
         }
       })), filterNamePlanets);
     setFilterData(arrayMultipliFilters);
-  }, [filterByName, filterByNumericValues, columnOptions]);
+
+    const arrayColumnOptions = [];
+    filterByNumericValues.forEach((filter) => arrayColumnOptions.push(filter.column));
+    const newOpitons = INITIAL_COLUMN_OPTIONS
+      .filter((opt) => !arrayColumnOptions.includes(opt));
+    setColumnOptions(newOpitons);
+  }, [filterByName, filterByNumericValues]);
 
   const handleClickFilter = () => {
     const newFilterByNumericValues = {
@@ -50,6 +60,25 @@ function FormsFilter() {
     setFilterByNumericValues([...filterByNumericValues, newFilterByNumericValues]);
     const filterColumnOptions = columnOptions.filter((option) => option !== column);
     setColumnOptions(filterColumnOptions);
+  };
+
+  const func = (nameColumn) => {
+    const filterSave = filterByNumericValues.filter((filter) => filter.column
+  !== nameColumn);
+    setFilterByNumericValues(filterSave);
+  };
+
+  /* useEffect(() => {
+    const filterSave = filterByNumericValues.filter((filter) => filter.column
+  !== deleteFilter);
+    console.log(filterSave);
+    setFilterByNumericValues(filterSave);
+    func();
+  }, [deleteFilter]); */
+
+  const allRemoveFilters = () => {
+    setColumnOptions(INITIAL_COLUMN_OPTIONS);
+    setFilterByNumericValues([]);
   };
 
   return (
@@ -67,11 +96,6 @@ function FormsFilter() {
         {columnOptions.map((option) => (
           <option key={ option }>{option}</option>
         ))}
-        {/* <option>population</option>
-        <option>orbital_period</option>
-        <option>diameter</option>
-        <option>rotation_period</option>
-        <option>surface_water</option> */}
       </select>
       <select
         data-testid="comparison-filter"
@@ -94,13 +118,24 @@ function FormsFilter() {
       >
         Filtrar
       </button>
-      <button data-testid="button-remove-filters" type="button">Remover Filtros</button>
+      <button
+        data-testid="button-remove-filters"
+        type="button"
+        onClick={ () => allRemoveFilters() }
+      >
+        Remover Filtros
+      </button>
       {filterByNumericValues.map((filter) => (
         <div key={ filter.value } data-testid="filter">
           <p>
             {`${filter.column} ${filter.comparison} ${filter.value}`}
           </p>
-          <button type="button">X</button>
+          <button
+            type="button"
+            onClick={ () => func(filter.column) }
+          >
+            X
+          </button>
         </div>))}
     </section>
   );
