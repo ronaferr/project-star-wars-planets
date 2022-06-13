@@ -11,11 +11,12 @@ function FormsFilter() {
   const [comparison, setComparison] = useState('maior que');
   const [value, setValue] = useState(ZERO);
   const [columnOptions, setColumnOptions] = useState(INITIAL_COLUMN_OPTIONS);
-  // const [filterColumn, setFilterColumn] = useState(INITIAL_COLUMN_OPTIONS);
-  // const [deleteFilter, setDeleteFilter] = useState('');
+  const [columnOrder, setColumnOrder] = useState('population');
+  const [orderSort, setOrderSort] = useState('ASC');
 
   const { data, setFilterData, setFilters,
-    filterByNumericValues, setFilterByNumericValues } = useContext(ContextPlanets);
+    filterByNumericValues, setFilterByNumericValues,
+    setOrder, filterData } = useContext(ContextPlanets);
 
   const filterName = ({ target }) => {
     setFilterByName(target.value.toLowerCase());
@@ -62,23 +63,39 @@ function FormsFilter() {
     setColumnOptions(filterColumnOptions);
   };
 
-  const func = (nameColumn) => {
+  const filterColumns = (nameColumn) => {
     const filterSave = filterByNumericValues.filter((filter) => filter.column
   !== nameColumn);
     setFilterByNumericValues(filterSave);
   };
 
-  /* useEffect(() => {
-    const filterSave = filterByNumericValues.filter((filter) => filter.column
-  !== deleteFilter);
-    console.log(filterSave);
-    setFilterByNumericValues(filterSave);
-    func();
-  }, [deleteFilter]); */
-
   const allRemoveFilters = () => {
     setColumnOptions(INITIAL_COLUMN_OPTIONS);
     setFilterByNumericValues([]);
+  };
+
+  const sortPlanets = () => {
+    const newOrderSort = {
+      column: columnOrder,
+      sort: orderSort,
+    };
+
+    setOrder(newOrderSort);
+    const notUnknown = filterData.filter((planets) => (
+      !planets[columnOrder].includes('unknown')
+    ));
+    const unknown = filterData.filter((planets) => (
+      planets[columnOrder].includes('unknown')
+    ));
+    if (orderSort === 'ASC') {
+      notUnknown.sort((a, b) => a[columnOrder] - b[columnOrder]);
+      unknown.forEach((planet) => notUnknown.push(planet));
+      setFilterData(notUnknown);
+    } else {
+      notUnknown.sort((a, b) => b[columnOrder] - a[columnOrder]);
+      unknown.forEach((planet) => notUnknown.push(planet));
+      setFilterData(notUnknown);
+    }
   };
 
   return (
@@ -118,6 +135,45 @@ function FormsFilter() {
       >
         Filtrar
       </button>
+      <select
+        data-testid="column-sort"
+        onChange={ ({ target }) => { setColumnOrder(target.value); } }
+      >
+        <option>population</option>
+        <option>orbital_period</option>
+        <option>diameter</option>
+        <option>rotation_period</option>
+        <option>surface_water</option>
+      </select>
+      <label htmlFor="ascendente">
+        <input
+          data-testid="column-sort-input-asc"
+          value="ASC"
+          type="radio"
+          name="order"
+          id="ascendente"
+          onChange={ () => { setOrderSort('ASC'); } }
+        />
+        Ascendente
+      </label>
+      <label htmlFor="descendente">
+        <input
+          value="DESC"
+          data-testid="column-sort-input-desc"
+          type="radio"
+          name="order"
+          id="descendente"
+          onChange={ () => { setOrderSort('DESC'); } }
+        />
+        Descendente
+      </label>
+      <button
+        type="button"
+        data-testid="column-sort-button"
+        onClick={ () => sortPlanets() }
+      >
+        Ordernar
+      </button>
       <button
         data-testid="button-remove-filters"
         type="button"
@@ -132,7 +188,7 @@ function FormsFilter() {
           </p>
           <button
             type="button"
-            onClick={ () => func(filter.column) }
+            onClick={ () => filterColumns(filter.column) }
           >
             X
           </button>

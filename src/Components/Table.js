@@ -8,6 +8,16 @@ function Table() {
     const getPlanets = async () => {
       const { results } = await fetch(endPoint).then((response) => response.json());
       results.map((planet) => delete planet.residents);
+      const menosUm = -1;
+      results.sort((a, b) => {
+        if (a.name < b.name) {
+          return menosUm;
+        }
+        if (a.name > b.name) {
+          return 1;
+        }
+        return 0;
+      });
       setData(results);
       setFilterData(results);
     };
@@ -37,7 +47,7 @@ function Table() {
         <tbody>
           {filterData.map((planet) => (
             <tr key={ planet.name }>
-              <td>{planet.name}</td>
+              <td data-testid="planet-name">{planet.name}</td>
               <td>{planet.rotation_period}</td>
               <td>{planet.orbital_period}</td>
               <td>{planet.diameter}</td>
