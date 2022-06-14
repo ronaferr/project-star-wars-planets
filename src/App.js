@@ -7,7 +7,6 @@ import ProviderPlanets from './Context/ProviderPlanets';
 function App() {
   return (
     <ProviderPlanets>
-      <main>Hello World</main>
       <FormsFilter />
       <Table />
     </ProviderPlanets>

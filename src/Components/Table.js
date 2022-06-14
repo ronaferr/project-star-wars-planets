@@ -1,5 +1,6 @@
 import React, { useEffect, useContext } from 'react';
 import ContextPlanets from '../Context/ContextPlanets';
+import '../css/Table.css';
 
 function Table() {
   const endPoint = 'https://swapi-trybe.herokuapp.com/api/planets/';
@@ -25,7 +26,7 @@ function Table() {
   }, []);
 
   return (
-    <div>
+    <div className="contanierTable">
       <table>
         <thead>
           <tr>

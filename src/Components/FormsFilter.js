@@ -1,5 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import ContextPlanets from '../Context/ContextPlanets';
+import starWars from '../Star_Wars_Logo.svg.png';
+import '../css/FormsFilter.css';
 
 function FormsFilter() {
   const INITIAL_COLUMN_OPTIONS = ['population', 'orbital_period',
@@ -99,13 +101,17 @@ function FormsFilter() {
   };
 
   return (
-    <section>
+    <section className="containerForms">
+      <img src={ starWars } alt="Star Wars Logo" className="logo" />
+      <br />
       <input
         type="text"
         onChange={ filterName }
         data-testid="name-filter"
         placeholder="Name Planet"
+        className="inputName"
       />
+      <br />
       <select
         data-testid="column-filter"
         onChange={ ({ target }) => { setColumn(target.value); } }
@@ -123,12 +129,14 @@ function FormsFilter() {
         <option>igual a</option>
       </select>
       <input
+        className="inputNumber"
         type="number"
         data-testid="value-filter"
         value={ value }
         onChange={ ({ target }) => { setValue(Number(target.value)); } }
       />
       <button
+        className="btnForm"
         type="button"
         data-testid="button-filter"
         onClick={ handleClickFilter }
@@ -145,7 +153,10 @@ function FormsFilter() {
         <option>rotation_period</option>
         <option>surface_water</option>
       </select>
-      <label htmlFor="ascendente">
+      <label
+        htmlFor="ascendente"
+        className="inputASC"
+      >
         <input
           data-testid="column-sort-input-asc"
           value="ASC"
@@ -156,7 +167,10 @@ function FormsFilter() {
         />
         Ascendente
       </label>
-      <label htmlFor="descendente">
+      <label
+        htmlFor="descendente"
+        className="inputDESC"
+      >
         <input
           value="DESC"
           data-testid="column-sort-input-desc"
@@ -168,6 +182,7 @@ function FormsFilter() {
         Descendente
       </label>
       <button
+        className="btnForm"
         type="button"
         data-testid="column-sort-button"
         onClick={ () => sortPlanets() }
@@ -175,6 +190,7 @@ function FormsFilter() {
         Ordernar
       </button>
       <button
+        className="btnForm"
         data-testid="button-remove-filters"
         type="button"
         onClick={ () => allRemoveFilters() }
@@ -182,7 +198,7 @@ function FormsFilter() {
         Remover Filtros
       </button>
       {filterByNumericValues.map((filter) => (
-        <div key={ filter.value } data-testid="filter">
+        <div key={ filter.value } data-testid="filter" className="filterSaved">
           <p>
             {`${filter.column} ${filter.comparison} ${filter.value}`}
           </p>
