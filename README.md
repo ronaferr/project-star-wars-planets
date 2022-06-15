@@ -7,6 +7,6 @@ Este projeto trata-se de uma aplicação onde pode se pesquisar por planetas de 
 
 ##  Tecnologias usadas
 
-> Desenvolvido usando: React, Redux, JS6, CSS3
+> Desenvolvido usando: React, Hooks, JS6, CSS3
 
-[Página da aplicação]()
+[Página da aplicação](https://project-star-wars-planets.vercel.app/)
